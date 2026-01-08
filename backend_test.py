@@ -100,7 +100,7 @@ class PEIAPITester:
             return False
         
         # Check if the error message is correct
-        if success and response:
+        if success:
             try:
                 error_data = response.json()
                 if "GitHub OAuth not configured" in error_data.get("detail", ""):
