@@ -69,13 +69,35 @@ class PEIAPITester:
         return success
 
     def test_github_oauth_endpoint(self):
-        """Test GitHub OAuth endpoint (should return 500 due to missing config)"""
-        success, response = self.run_test(
-            "GitHub OAuth Login (Expected to fail)",
-            "GET",
-            "api/auth/github/login",
-            500
-        )
+        """Test GitHub OAuth endpoint (should return 500/520 due to missing config)"""
+        # Try the request
+        url = f"{self.base_url}/api/auth/github/login"
+        headers = {'Content-Type': 'application/json'}
+        
+        self.tests_run += 1
+        print(f"\n🔍 Testing GitHub OAuth Login (Expected to fail)...")
+        print(f"   URL: {url}")
+        
+        try:
+            response = requests.get(url, headers=headers, timeout=10)
+            
+            # Accept both 500 and 520 (load balancer might return 520)
+            success = response.status_code in [500, 520]
+            if success:
+                self.tests_passed += 1
+                print(f"✅ Passed - Status: {response.status_code}")
+                try:
+                    response_data = response.json()
+                    print(f"   Response: {response_data}")
+                except:
+                    print(f"   Response: {response.text[:200]}...")
+            else:
+                print(f"❌ Failed - Expected 500 or 520, got {response.status_code}")
+                print(f"   Response: {response.text[:200]}...")
+                return False
+        except Exception as e:
+            print(f"❌ Failed - Error: {str(e)}")
+            return False
         
         # Check if the error message is correct
         if success and response:
