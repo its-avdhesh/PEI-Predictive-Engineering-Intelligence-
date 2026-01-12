@@ -115,8 +115,8 @@ async def github_callback(
         )
         
         # Redirect to frontend with token
-        frontend_base = settings.github_redirect_uri.replace("/api/auth/github/callback", "")
-        redirect_url = f"{frontend_base}/auth/callback?token={jwt_token}"
+        frontend_base = "http://localhost:3000"
+        redirect_url = f"{frontend_base}?token={jwt_token}&login=success"
         return RedirectResponse(url=redirect_url)
         
     except HTTPException:

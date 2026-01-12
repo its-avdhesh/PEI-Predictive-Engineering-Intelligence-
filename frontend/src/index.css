@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prevent flash of unstyled content */
+html, body, #root {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Only hide horizontal overflow */
+  background-color: #111827; /* Dark background to match theme */
+  color: #ffffff;
+}
+
+/* Ensure immediate dark theme */
 body {
     margin: 0;
     font-family:
@@ -10,6 +21,25 @@ body {
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden; /* Allow vertical scrolling */
+    background-color: #111827 !important;
+    color: #ffffff !important;
+}
+
+/* Hide scrollbars for all browsers but allow scrolling */
+::-webkit-scrollbar {
+  display: none !important;
+}
+
+* {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
+}
+
+/* Prevent flash during loading */
+#root {
+  opacity: 1;
+  transition: opacity 0.1s ease-in;
 }
 
 code {

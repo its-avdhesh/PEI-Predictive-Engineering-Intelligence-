@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEI - Predictive Engineering Intelligence</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        'gray': {
+                            50: '#f9fafb',
+                            100: '#f3f4f6',
+                            200: '#e5e7eb',
+                            300: '#d1d5db',
+                            400: '#9ca3af',
+                            500: '#6b7280',
+                            600: '#4b5563',
+                            700: '#374151',
+                            800: '#1f2937',
+                            900: '#111827',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #ffffff;
+            color: #111827;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .dark body {
+            background: #0f172a;
+            color: #f1f5f9;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-border {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            padding: 1px;
+            border-radius: 0.75rem;
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(59, 130, 246, 0.04);
+        }
+        
+        .dark .card-hover:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(59, 130, 246, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #6b7280;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .dark .btn-secondary {
+            color: #d1d5db;
+            border-color: #374151;
+        }
+        
+        .btn-secondary:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+        
+        .dark .btn-secondary:hover {
+            background: #1f2937;
+            border-color: #4b5563;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        
+        .dark .loading-spinner {
+            border-color: #374151;
+            border-top-color: #3b82f6;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .repo-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .repo-card:hover {
+            border-left-color: #3b82f6;
+        }
+        
+        .risk-high {
+            border-left-color: #ef4444;
+        }
+        
+        .risk-medium {
+            border-left-color: #f59e0b;
+        }
+        
+        .risk-low {
+            border-left-color: #10b981;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        
+        .dark .metric-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+    <!-- Navigation -->
+    <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="text-2xl font-bold gradient-text">⚡ PEI</span>
+                    </div>
+                    <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+                        <a href="#" onclick="showPage('landing')" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">Home</a>
+                        <a href="#" onclick="showPage('dashboard')" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">Dashboard</a>
+                        <a href="#" onclick="showPage('docs')" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">Documentation</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleDarkMode()" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 p-2 rounded-lg transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:inline"></i>
+                    </button>
+                    <div id="user-menu" class="hidden">
+                        <button onclick="showPage('dashboard')" class="btn-secondary flex items-center space-x-2">
+                            <i class="fas fa-user"></i>
+                            <span>Dashboard</span>
+                        </button>
+                    </div>
+                    <div id="auth-menu">
+                        <button onclick="showPage('login')" class="btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign In
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" class="min-h-screen">
+        <!-- Content will be dynamically loaded here -->
+    </main>
+
+    <script>
+        // State Management
+        let currentPage = 'landing';
+        let currentUser = null;
+        let repositories = [];
+        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+            }
+            checkAuthStatus();
+            showPage('landing');
+        });
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        // Page Management
+        function showPage(page) {
+            currentPage = page;
+            const mainContent = document.getElementById('main-content');
+            
+            switch(page) {
+                case 'landing':
+                    showLandingPage();
+                    break;
+                case 'login':
+                    showLoginPage();
+                    break;
+                case 'dashboard':
+                    showDashboard();
+                    break;
+                case 'analysis':
+                    showAnalysisPage();
+                    break;
+                case 'docs':
+                    showDocsPage();
+                    break;
+                default:
+                    showLandingPage();
+            }
+        }
+
+        // Authentication Check
+        async function checkAuthStatus() {
+            const token = localStorage.getItem('pei_token');
+            const urlParams = new URLSearchParams(window.location.search);
+            const authToken = urlParams.get('token');
+            const loginSuccess = urlParams.get('login');
+            
+            if (authToken && loginSuccess === 'success') {
+                localStorage.setItem('pei_token', authToken);
+                currentUser = { login: "github-user", avatar: "https://github.com/github.png" };
+                window.history.replaceState({}, document.title, window.location.pathname);
+                updateNavigation();
+                showDashboard();
+                loadRepositories();
+                return;
+            }
+            
+            if (token) {
+                currentUser = { login: "github-user", avatar: "https://github.com/github.png" };
+                updateNavigation();
+            }
+        }
+
+        // Update Navigation Based on Auth
+        function updateNavigation() {
+            const userMenu = document.getElementById('user-menu');
+            const authMenu = document.getElementById('auth-menu');
+            
+            if (currentUser) {
+                userMenu.classList.remove('hidden');
+                authMenu.classList.add('hidden');
+            } else {
+                userMenu.classList.add('hidden');
+                authMenu.classList.remove('hidden');
+            }
+        }
+
+        // Landing Page
+        function showLandingPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="relative overflow-hidden bg-white dark:bg-gray-900">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="relative z-10 pb-8 bg-white dark:bg-gray-900 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
+                            <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 lg:mt-16">
+                                <div class="text-center">
+                                    <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white sm:text-5xl md:text-6xl fade-in">
+                                        <span class="block">Predictive Engineering</span>
+                                        <span class="gradient-text">Intelligence</span>
+                                    </h1>
+                                    <p class="mt-6 max-w-lg mx-auto text-xl text-gray-500 dark:text-gray-300 sm:max-w-3xl">
+                                        Advanced structural analysis for your codebase. Detect architectural risks, identify god files, and improve code quality with deterministic engineering intelligence.
+                                    </p>
+                                    <div class="mt-10 flex justify-center space-x-4">
+                                        <button onclick="startAnalysis()" class="btn-primary text-lg px-8 py-4">
+                                            <i class="fas fa-rocket"></i>
+                                            Start Analysis
+                                        </button>
+                                        <button onclick="showPage('docs')" class="btn-secondary text-lg px-8 py-4">
+                                            <i class="fas fa-book"></i>
+                                            Learn More
+                                        </button>
+                                    </div>
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+                    
+                    <!-- Features Section -->
+                    <div class="bg-gray-50 dark:bg-gray-800 py-24">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="text-center">
+                                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">Powerful Analysis Features</h2>
+                                <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
+                                    Comprehensive codebase insights to improve your engineering practices
+                                </p>
+                            </div>
+                            <div class="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                                <div class="text-center card-hover bg-white dark:bg-gray-700 p-8 rounded-xl shadow-lg">
+                                    <div class="flex justify-center">
+                                        <div class="text-4xl text-blue-600">🔍</div>
+                                    </div>
+                                    <h3 class="mt-6 text-lg font-medium text-gray-900 dark:text-white">God Files Detection</h3>
+                                    <p class="mt-2 text-base text-gray-600 dark:text-gray-300">
+                                        Identify large, complex files with multiple responsibilities that make maintenance difficult.
+                                    </p>
+                                </div>
+                                <div class="text-center card-hover bg-white dark:bg-gray-700 p-8 rounded-xl shadow-lg">
+                                    <div class="flex justify-center">
+                                        <div class="text-4xl text-purple-600">🔄</div>
+                                    </div>
+                                    <h3 class="mt-6 text-lg font-medium text-gray-900 dark:text-white">Circular Dependencies</h3>
+                                    <p class="mt-2 text-base text-gray-600 dark:text-gray-300">
+                                        Detect dependency cycles that break modularity and create maintenance nightmares.
+                                    </p>
+                                </div>
+                                <div class="text-center card-hover bg-white dark:bg-gray-700 p-8 rounded-xl shadow-lg">
+                                    <div class="flex justify-center">
+                                        <div class="text-4xl text-green-600">📊</div>
+                                    </div>
+                                    <h3 class="mt-6 text-lg font-medium text-gray-900 dark:text-white">High Coupling Analysis</h3>
+                                    <p class="mt-2 text-base text-gray-600 dark:text-gray-300">
+                                        Find tightly coupled components that make changes risky and expensive.
+                                    </p>
+                                </div>
+                                <div class="text-center card-hover bg-white dark:bg-gray-700 p-8 rounded-xl shadow-lg">
+                                    <div class="flex justify-center">
+                                        <div class="text-4xl text-orange-600">🏗️</div>
+                                    </div>
+                                    <h3 class="mt-6 text-lg font-medium text-gray-900 dark:text-white">Architecture Assessment</h3>
+                                    <p class="mt-2 text-base text-gray-600 dark:text-gray-300">
+                                        Evaluate layering, boundaries, and structural patterns in your codebase.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- CTA Section -->
+                    <div class="bg-blue-600">
+                        <div class="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:py-24 lg:px-8">
+                            <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                                <span class="block">Ready to improve your codebase?</span>
+                            </h2>
+                            <p class="mt-4 text-lg leading-6 text-blue-200">
+                                Join thousands of developers using PEI to build better software.
+                            </p>
+                            <div class="mt-8">
+                                <button onclick="startAnalysis()" class="btn-primary bg-white text-blue-600 hover:bg-gray-50 text-lg px-8 py-4">
+                                    <i class="fas fa-chart-line"></i>
+                                    Analyze Your Repository
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Login Page
+        function showLoginPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+                    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+                        <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                            <div class="text-center">
+                                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">
+                                    Sign in to PEI
+                                </h2>
+                                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                                    Connect your GitHub account to analyze your repositories
+                                </p>
+                            </div>
+                            
+                            <div class="mt-8">
+                                <div class="space-y-6">
+                                    <div>
+                                        <button onclick="loginWithGitHub()" class="w-full flex justify-center items-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                            <i class="fab fa-github mr-2"></i>
+                                            Continue with GitHub
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6">
+                                    <div class="relative">
+                                        <div class="absolute inset-0 flex items-center">
+                                            <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                                        </div>
+                                        <div class="relative flex justify-center text-sm">
+                                            <span class="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">Secure authentication</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 text-xs text-gray-500 dark:text-gray-400 text-center">
+                                    <p>• Read-only access to your repositories</p>
+                                    <p>• No code modification</p>
+                                    <p>• Revoke access anytime</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Dashboard
+        function showDashboard() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+                    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                        <div class="px-4 py-6 sm:px-0">
+                            <div class="flex items-center justify-between">
+                                <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Your Repositories</h1>
+                                <div class="flex items-center space-x-4">
+                                    <select class="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white" id="filter-select">
+                                        <option value="all">All Repositories</option>
+                                        <option value="javascript">JavaScript</option>
+                                        <option value="python">Python</option>
+                                        <option value="typescript">TypeScript</option>
+                                        <option value="java">Java</option>
+                                    </select>
+                                    <button onclick="loadRepositories()" class="btn-secondary">
+                                        <i class="fas fa-sync-alt"></i>
+                                        Refresh
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="repo-grid" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-4 py-6">
+                            <div class="col-span-full text-center py-12">
+                                <div class="loading-spinner mx-auto"></div>
+                                <p class="mt-4 text-gray-600 dark:text-gray-400">Loading repositories...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            if (currentUser) {
+                loadRepositories();
+            }
+        }
+
+        // Analysis Page
+        function showAnalysisPage(repoId = null) {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+                    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                        <div class="px-4 py-6 sm:px-0">
+                            <div class="flex items-center justify-between">
+                                <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Repository Analysis</h1>
+                                <button onclick="showDashboard()" class="btn-secondary">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Back to Dashboard
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="analysis-content" class="px-4 py-6">
+                            <div class="text-center py-12">
+                                <div class="loading-spinner mx-auto"></div>
+                                <p class="mt-4 text-gray-600 dark:text-gray-400">Loading analysis...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Documentation Page
+        function showDocsPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+                    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                        <div class="text-center">
+                            <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-8">Documentation</h1>
+                            <div class="max-w-4xl mx-auto text-left">
+                                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
+                                    <h2 class="text-2xl font-bold mb-4">Getting Started</h2>
+                                    <p class="text-gray-600 dark:text-gray-300 mb-4">
+                                        PEI provides deterministic structural analysis for your codebase. Our system identifies architectural risks without relying on AI predictions.
+                                    </p>
+                                </div>
+                                
+                                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
+                                    <h2 class="text-2xl font-bold mb-4">Features</h2>
+                                    <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+                                        <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i> God Files Detection</li>
+                                        <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i> Circular Dependencies Analysis</li>
+                                        <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i> High Coupling Detection</li>
+                                        <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i> Architecture Assessment</li>
+                                        <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-3"></i> Risk Quantification</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Start Analysis Flow
+        function startAnalysis() {
+            if (currentUser) {
+                showDashboard();
+            } else {
+                showPage('login');
+            }
+        }
+
+        // GitHub OAuth
+        function loginWithGitHub() {
+            window.location.href = 'http://localhost:8000/api/auth/github/login';
+        }
+
+        // Load Repositories
+        async function loadRepositories() {
+            try {
+                const token = localStorage.getItem('pei_token');
+                const response = await fetch('http://localhost:8000/api/repos/list', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    repositories = data.repositories || [];
+                    displayRepositories();
+                } else {
+                    throw new Error('Failed to load repositories');
+                }
+            } catch (error) {
+                console.error('Error loading repositories:', error);
+                document.getElementById('repo-grid').innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-red-600 dark:text-red-400">❌ Failed to load repositories</p>
+                        <button onclick="loadRepositories()" class="btn-secondary mt-4">Retry</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Display Repositories
+        function displayRepositories() {
+            const repoGrid = document.getElementById('repo-grid');
+            
+            if (repositories.length === 0) {
+                repoGrid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-gray-600 dark:text-gray-400">No repositories found</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            repoGrid.innerHTML = repositories.map(repo => `
+                <div class="repo-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 card-hover cursor-pointer" onclick="analyzeRepository('${repo.name}', ${repo.id})">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                            <i class="fab fa-github text-gray-600 dark:text-gray-300"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-white truncate">${repo.name}</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${repo.full_name}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+                        <span><i class="fas fa-code-branch mr-1"></i> ${repo.language || 'Unknown'}</span>
+                        <span><i class="fas fa-star mr-1"></i> ${repo.stargazers_count || 0}</span>
+                    </div>
+                    <div class="mt-4">
+                        <button class="btn-primary w-full">
+                            <i class="fas fa-chart-line"></i>
+                            Analyze
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Analyze Repository
+        async function analyzeRepository(repoName, repoId) {
+            showAnalysisPage();
+            
+            try {
+                const token = localStorage.getItem('pei_token');
+                const response = await fetch(`http://localhost:8000/api/repos/analyze/${repoId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const results = await response.json();
+                    displayAnalysisResults(results);
+                } else {
+                    throw new Error('Analysis failed');
+                }
+            } catch (error) {
+                console.error('Analysis error:', error);
+                document.getElementById('analysis-content').innerHTML = `
+                    <div class="text-center py-12">
+                        <p class="text-red-600 dark:text-red-400">❌ Analysis failed</p>
+                        <button onclick="showDashboard()" class="btn-secondary mt-4">Back to Dashboard</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Display Analysis Results
+        function displayAnalysisResults(results) {
+            const analysisContent = document.getElementById('analysis-content');
+            
+            if (results.feasibility && !results.feasibility.is_feasible) {
+                analysisContent.innerHTML = `
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+                        <div class="text-center">
+                            <div class="text-6xl mb-4">🚫</div>
+                            <h2 class="text-2xl font-bold text-red-600 mb-4">Repository Not Feasible</h2>
+                            <div class="text-left max-w-2xl mx-auto">
+                                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-4">
+                                    <h3 class="font-semibold text-red-800 dark:text-red-200 mb-2">MVP Limits Exceeded:</h3>
+                                    <ul class="space-y-1 text-red-700 dark:text-red-300">
+                                        ${results.feasibility.reasons.map(reason => `<li>• ${reason}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            analysisContent.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Summary Card -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Analysis Summary</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div class="metric-card rounded-lg p-4">
+                                <div class="text-2xl font-bold text-blue-600">${results.feasibility?.stats?.total_files || 0}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Files</div>
+                            </div>
+                            <div class="metric-card rounded-lg p-4">
+                                <div class="text-2xl font-bold text-green-600">${(results.feasibility?.stats?.total_loc || 0).toLocaleString()}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Lines of Code</div>
+                            </div>
+                            <div class="metric-card rounded-lg p-4">
+                                <div class="text-2xl font-bold text-purple-600">${results.feasibility?.stats?.max_depth || 0}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Max Depth</div>
+                            </div>
+                            <div class="metric-card rounded-lg p-4">
+                                <div class="text-2xl font-bold text-orange-600">${results.analysis_time_seconds || 0}s</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Analysis Time</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Risks Section -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Detected Risks</h2>
+                        ${results.risks && results.risks.length > 0 ? `
+                            <div class="space-y-4">
+                                ${results.risks.map(risk => `
+                                    <div class="risk-high border-l-4 border-red-500 bg-red-50 dark:bg-red-900/20 p-4 rounded-r-lg">
+                                        <h3 class="font-semibold text-red-800 dark:text-red-200">${risk.title}</h3>
+                                        <p class="text-red-700 dark:text-red-300 mt-1">${risk.why_it_matters}</p>
+                                        <div class="mt-2">
+                                            <span class="text-sm font-medium text-red-600 dark:text-red-400">Files: ${risk.files.join(', ')}</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="text-sm font-medium text-blue-600 dark:text-blue-400">💡 ${risk.suggested_action}</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : `
+                            <div class="text-center py-8">
+                                <div class="text-4xl mb-4">🎉</div>
+                                <p class="text-green-600 dark:text-green-400">No structural risks detected!</p>
+                                <p class="text-gray-600 dark:text-gray-400 mt-2">Your repository follows good engineering practices.</p>
+                            </div>
+                        `}
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex justify-center space-x-4">
+                        <button onclick="showDashboard()" class="btn-secondary">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Dashboard
+                        </button>
+                        <button onclick="startAnalysis()" class="btn-primary">
+                            <i class="fas fa-chart-line"></i>
+                            Analyze Another Repository
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

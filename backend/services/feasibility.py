@@ -83,9 +83,12 @@ class FeasibilityChecker:
         max_depth = 0
         languages = {}
         
-        # Directories that suggest monorepo
-        monorepo_indicators = {'packages', 'apps', 'services', 'modules', 'workspaces'}
+        # Directories that strongly suggest monorepo (very specific indicators)
+        monorepo_indicators = {
+            'packages', 'apps', 'microservices', 'libs'
+        }
         is_monorepo = False
+        package_config_files = 0
         
         for root, dirs, files in os.walk(repo_path):
             # Skip common non-code directories
@@ -94,8 +97,12 @@ class FeasibilityChecker:
                 'build', 'dist', '.next', 'coverage', '.pytest_cache'
             }]
             
-            # Check for monorepo indicators
-            if any(indicator in dirs for indicator in monorepo_indicators):
+            # Count package config files across the entire repo
+            config_files = [f for f in files if f in ['package.json', 'pyproject.toml', 'Cargo.toml', 'pom.xml', 'build.gradle']]
+            package_config_files += len(config_files)
+            
+            # Only consider monorepo if we find strong indicators AND multiple package files
+            if any(indicator in dirs for indicator in monorepo_indicators) and package_config_files > 1:
                 is_monorepo = True
             
             # Calculate depth

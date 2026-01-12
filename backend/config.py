@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     cors_origins: str = "*"
     github_client_id: str = ""
     github_client_secret: str = ""
-    github_redirect_uri: str = "https://pei-mvp.preview.emergentagent.com/api/auth/github/callback"
+    github_redirect_uri: str = "http://localhost:8000/api/auth/github/callback"
     jwt_secret: str = "change-this-to-random-secret-in-production"
     jwt_algorithm: str = "HS256"
     

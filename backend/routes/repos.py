@@ -96,7 +96,9 @@ async def analyze_repository(
             
             # Save to database
             analyses_collection = db["analyses"]
-            await analyses_collection.insert_one(result)
+            insert_result = await analyses_collection.insert_one(result)
+            # Remove _id from result to avoid serialization issues
+            result.pop("_id", None)
             
             # Cleanup
             if repo_path:
@@ -130,7 +132,9 @@ async def analyze_repository(
         
         # Save to database
         analyses_collection = db["analyses"]
-        await analyses_collection.insert_one(result)
+        insert_result = await analyses_collection.insert_one(result)
+        # Remove _id from result to avoid serialization issues
+        result.pop("_id", None)
         
         logger.info(f"Analysis complete for {repo['full_name']}: {len(risks_data)} risks found")
         
@@ -157,10 +161,13 @@ async def get_analyses(
     """Get all analyses for the current user."""
     try:
         analyses_collection = db["analyses"]
-        analyses = await analyses_collection.find(
+        cursor = analyses_collection.find(
             {"user_github_id": current_user["github_id"]},
             {"_id": 0}
-        ).sort("analyzed_at", -1).to_list(100)
+        ).sort("analyzed_at", -1).limit(100)
+        analyses = []
+        async for doc in cursor:
+            analyses.append(doc)
         
         return {
             "analyses": analyses,
