@@ -7,10 +7,10 @@ class Settings(BaseSettings):
     cors_origins: str = "*"
     github_client_id: str = ""
     github_client_secret: str = ""
-    github_redirect_uri: str = "http://localhost:8000/api/auth/github/callback"
+    github_redirect_uri: str = ""  # No default - must be set in env
     jwt_secret: str = "change-this-to-random-secret-in-production"
     jwt_algorithm: str = "HS256"
-    frontend_url: str = "http://localhost:3000"
+    frontend_url: str = ""  # No default - must be set in env
     
     model_config = SettingsConfigDict(
         env_file=".env",
