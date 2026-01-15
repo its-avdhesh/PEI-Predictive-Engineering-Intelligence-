@@ -18,7 +18,6 @@ import {
   FaDownload,
   FaUser
 } from 'react-icons/fa';
-import { useAuth } from '../contexts/AuthContext.jsx';
 
 const AnalysisPage = () => {
   const { repoId } = useParams();

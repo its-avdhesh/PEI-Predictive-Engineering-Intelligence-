@@ -18,8 +18,6 @@ async def connect_to_mongo():
         db.client = AsyncIOMotorClient(
             settings.mongo_url, 
             server_api=ServerApi('1'),
-            tls=True,
-            tlsAllowInvalidCertificates=True,
             connectTimeoutMS=30000,
             socketTimeoutMS=30000,
             serverSelectionTimeoutMS=30000

@@ -6,8 +6,9 @@ import {
   FaCheckCircle, 
   FaUsers,
   FaCodeBranch,
-  FaExclamationTriangle,
-  FaArrowLeft
+  FaArrowLeft,
+  FaRocket,
+  FaStar
 } from 'react-icons/fa';
 
 const SignUpPage = () => {

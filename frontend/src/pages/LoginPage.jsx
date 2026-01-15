@@ -7,8 +7,7 @@ import {
   FaLock,
   FaUsers,
   FaCodeBranch,
-  FaExclamationTriangle,
-  FaArrowLeft
+  FaExclamationTriangle
 } from 'react-icons/fa';
 
 const LoginPage = () => {
