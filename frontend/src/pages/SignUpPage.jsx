@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaGithub, FaShieldAlt, FaCheckCircle, FaUsers, FaCodeBranch, FaArrowLeft, FaRocket, FaStar } from 'react-icons/fa';
+import { FaGithub, FaShieldAlt, FaCheckCircle, FaUsers, FaCodeBranch, FaArrowLeft, FaFire, FaStar } from 'react-icons/fa';
 
 const SignUpPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -50,7 +50,7 @@ const SignUpPage = () => {
             <div className="text-center mb-8">
               <div className="flex justify-center mb-4">
                 <div className="flex items-center space-x-2 bg-green-600 px-3 py-1 rounded-full">
-                  <FaRocket className="w-4 h-4" />
+                  <FaFire className="w-4 h-4" />
                   <span className="text-sm font-medium">Free Forever for Open Source</span>
                 </div>
               </div>
