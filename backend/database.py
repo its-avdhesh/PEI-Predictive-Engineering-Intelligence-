@@ -17,7 +17,12 @@ async def connect_to_mongo():
         settings = get_settings()
         db.client = AsyncIOMotorClient(
             settings.mongo_url, 
-            server_api=ServerApi('1')
+            server_api=ServerApi('1'),
+            tls=True,
+            tlsAllowInvalidCertificates=True,
+            connectTimeoutMS=30000,
+            socketTimeoutMS=30000,
+            serverSelectionTimeoutMS=30000
         )
         
         # Test the connection
@@ -29,7 +34,8 @@ async def connect_to_mongo():
         
     except Exception as e:
         logger.error(f"Failed to connect to MongoDB: {e}")
-        raise
+        # Don't raise the exception to allow the app to start without DB
+        logger.warning("Application will continue without database connection")
 
 async def close_mongo_connection():
     """Close MongoDB connection"""

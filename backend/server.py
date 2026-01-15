@@ -14,6 +14,9 @@ from database import connect_to_mongo, close_mongo_connection
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+# Debug: Print environment variables to verify they're loaded
+print(f"MONGO_URL from env: {os.environ.get('MONGO_URL', 'NOT FOUND')}")
+
 # Create the main app
 app = FastAPI(
     title="PEI - Predictive Engineering Intelligence",
