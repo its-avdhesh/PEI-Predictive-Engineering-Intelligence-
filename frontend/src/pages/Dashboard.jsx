@@ -10,121 +10,37 @@ import {
   FaUsers,
   FaFire,
   FaChartLine,
-  FaClock,
-  FaFilter,
-  FaHistory,
-  FaRocket,
   FaExclamationTriangle,
-  FaCheckCircle,
   FaEye
 } from 'react-icons/fa';
-import { useAuth } from '../contexts/AuthContext.jsx';
+import { repoService } from '../services/api.js';
 
 const Dashboard = () => {
-  const { user } = useAuth();
   const [repositories, setRepositories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('updated');
 
-  // Mock data for demonstration
+  // Fetch real repositories from API
   useEffect(() => {
-    setTimeout(() => {
-      setRepositories([
-        {
-          id: 1,
-          name: 'react-components',
-          full_name: 'developer/react-components',
-          description: 'Reusable React component library with modern hooks',
-          language: 'JavaScript',
-          stargazers_count: 1234,
-          forks_count: 89,
-          open_issues_count: 12,
-          updated_at: '2024-01-15T10:30:00Z',
-          recent_activity: 'high',
-          contributors: 8,
-          branches: 15,
-          status: 'active'
-        },
-        {
-          id: 2,
-          name: 'api-server',
-          full_name: 'developer/api-server',
-          description: 'RESTful API server with Node.js and Express',
-          language: 'TypeScript',
-          stargazers_count: 567,
-          forks_count: 45,
-          open_issues_count: 3,
-          updated_at: '2024-01-14T15:45:00Z',
-          recent_activity: 'medium',
-          contributors: 5,
-          branches: 8,
-          status: 'active'
-        },
-        {
-          id: 3,
-          name: 'mobile-app',
-          full_name: 'developer/mobile-app',
-          description: 'React Native mobile application for iOS and Android',
-          language: 'JavaScript',
-          stargazers_count: 892,
-          forks_count: 67,
-          open_issues_count: 8,
-          updated_at: '2024-01-13T09:20:00Z',
-          recent_activity: 'low',
-          contributors: 6,
-          branches: 12,
-          status: 'active'
-        },
-        {
-          id: 4,
-          name: 'data-pipeline',
-          full_name: 'developer/data-pipeline',
-          description: 'ETL pipeline for processing large datasets',
-          language: 'Python',
-          stargazers_count: 234,
-          forks_count: 23,
-          open_issues_count: 5,
-          updated_at: '2024-01-12T14:10:00Z',
-          recent_activity: 'medium',
-          contributors: 3,
-          branches: 6,
-          status: 'active'
-        },
-        {
-          id: 5,
-          name: 'ml-models',
-          full_name: 'developer/ml-models',
-          description: 'Machine learning models and training scripts',
-          language: 'Python',
-          stargazers_count: 445,
-          forks_count: 34,
-          open_issues_count: 2,
-          updated_at: '2024-01-11T11:55:00Z',
-          recent_activity: 'low',
-          contributors: 4,
-          branches: 9,
-          status: 'active'
-        },
-        {
-          id: 6,
-          name: 'design-system',
-          full_name: 'developer/design-system',
-          description: 'Component library and design tokens',
-          language: 'TypeScript',
-          stargazers_count: 789,
-          forks_count: 56,
-          open_issues_count: 7,
-          updated_at: '2024-01-10T16:30:00Z',
-          recent_activity: 'high',
-          contributors: 7,
-          branches: 11,
-          status: 'active'
-        }
-      ]);
-      setLoading(false);
-    }, 1000);
+    const fetchRepositories = async () => {
+      try {
+        console.log('Fetching repositories...');
+        const data = await repoService.listRepositories();
+        console.log('API response:', data);
+        setRepositories(data.repositories || []);
+      } catch (error) {
+        console.error('Error fetching repositories:', error);
+        console.error('Error details:', error.response?.data || error.message);
+        // Fallback to empty array
+        setRepositories([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRepositories();
   }, []);
 
   const filteredRepos = repositories.filter(repo => {
@@ -147,15 +63,6 @@ const Dashboard = () => {
     }
     return new Date(b.updated_at) - new Date(a.updated_at);
   });
-
-  const getActivityColor = (activity) => {
-    switch (activity) {
-      case 'high': return 'bg-red-600';
-      case 'medium': return 'bg-yellow-600';
-      case 'low': return 'bg-green-600';
-      default: return 'bg-gray-600';
-    }
-  };
 
   const getLanguageColor = (language) => {
     switch (language) {
@@ -260,7 +167,7 @@ const Dashboard = () => {
               <span className="text-sm text-gray-400">Total</span>
             </div>
             <div className="text-2xl font-bold text-white mb-1">
-              {repositories.reduce((sum, repo) => sum + repo.stargazers_count, 0).toLocaleString()}
+              {repositories.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0).toLocaleString()}
             </div>
             <div className="text-sm text-gray-400">Stars</div>
           </div>
@@ -345,7 +252,7 @@ const Dashboard = () => {
                               {repo.name}
                             </div>
                             <div className="text-sm text-gray-400">
-                              {repo.description}
+                              {repo.description || 'No description available'}
                             </div>
                           </div>
                         </div>
@@ -358,22 +265,22 @@ const Dashboard = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                         <div className="flex items-center">
                           <FaStar className="w-4 h-4 text-yellow-500 mr-1" />
-                          {repo.stargazers_count.toLocaleString()}
+                          {(repo.stargazers_count || 0).toLocaleString()}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                         <div className="flex items-center">
                           <FaCodeBranch className="w-4 h-4 text-gray-400 mr-1" />
-                          {repo.forks_count}
+                          {(repo.forks_count || 0).toLocaleString()}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                        {repo.open_issues_count}
+                        {repo.open_issues_count || 0}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getActivityColor(repo.recent_activity)}`}>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-600 text-gray-300">
                           <FaFire className="w-3 h-3 mr-1" />
-                          {repo.recent_activity}
+                          Active
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">

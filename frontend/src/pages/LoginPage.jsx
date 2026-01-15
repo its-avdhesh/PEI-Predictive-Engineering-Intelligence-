@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { 
   FaGithub, 
   FaShieldAlt, 
@@ -13,7 +13,6 @@ import {
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleGitHubLogin = () => {
     setIsLoading(true);
@@ -33,13 +32,13 @@ const LoginPage = () => {
               <FaGithub className="w-6 h-6 text-white" />
               <span className="text-lg font-semibold">PEI</span>
             </Link>
-            <Link
-              to="/"
-              className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
-            >
-              <FaArrowLeft className="w-4 h-4" />
+              <button
+                type="button"
+                onClick={() => window.history.back()}
+                className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
+              >
               <span>Back to Home</span>
-            </Link>
+              </button>
           </div>
         </div>
       </div>
@@ -181,9 +180,9 @@ const LoginPage = () => {
             <div className="flex items-center space-x-4 mb-4 sm:mb-0">
               <span>© 2024 PEI</span>
               <span>•</span>
-              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <button type="button" className="hover:text-white transition-colors">Privacy Policy</button>
               <span>•</span>
-              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+              <button type="button" className="hover:text-white transition-colors">Terms of Service</button>
             </div>
             <div className="flex items-center space-x-2">
               <FaShieldAlt className="w-4 h-4" />

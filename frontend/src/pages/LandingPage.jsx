@@ -5,14 +5,12 @@ import {
   FaCheckCircle, 
   FaUsers, 
   FaStar,
-  FaRocket,
   FaShieldAlt,
   FaClock,
   FaChartLine,
   FaCodeBranch,
   FaArrowRight,
-  FaQuoteLeft,
-  FaQuoteRight
+  FaQuoteLeft
 } from 'react-icons/fa';
 
 const LandingPage = () => {

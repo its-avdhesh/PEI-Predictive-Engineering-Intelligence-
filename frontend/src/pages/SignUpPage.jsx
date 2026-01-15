@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { 
   FaGithub, 
   FaShieldAlt, 
   FaCheckCircle, 
-  FaLock,
   FaUsers,
   FaCodeBranch,
-  FaArrowLeft,
-  FaRocket,
-  FaStar
+  FaExclamationTriangle,
+  FaArrowLeft
 } from 'react-icons/fa';
 
 const SignUpPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleGitHubSignUp = () => {
     setIsLoading(true);
@@ -131,9 +128,9 @@ const SignUpPage = () => {
             <div className="mt-8 p-4 bg-gray-800 rounded-lg border border-gray-700">
               <p className="text-xs text-gray-400 text-center">
                 By signing up, you agree to our{' '}
-                <a href="#" className="text-blue-400 hover:text-blue-300">Terms of Service</a>
+                <button type="button" className="text-blue-400 hover:text-blue-300">Terms of Service</button>
                 {' '}and{' '}
-                <a href="#" className="text-blue-400 hover:text-blue-300">Privacy Policy</a>.
+                <button type="button" className="text-blue-400 hover:text-blue-300">Privacy Policy</button>.
                 {' '}We'll only request read access to repository metadata.
               </p>
             </div>

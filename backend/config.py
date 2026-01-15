@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     github_redirect_uri: str = "http://localhost:8000/api/auth/github/callback"
     jwt_secret: str = "change-this-to-random-secret-in-production"
     jwt_algorithm: str = "HS256"
+    frontend_url: str = "http://localhost:3000"
     
     model_config = SettingsConfigDict(
         env_file=".env",

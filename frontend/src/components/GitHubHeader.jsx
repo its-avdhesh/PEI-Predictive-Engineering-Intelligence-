@@ -4,14 +4,11 @@ import {
   FaGithub, 
   FaSearch,
   FaCodeBranch,
-  FaStar,
   FaBell,
   FaPlus,
   FaCaretDown,
   FaSun,
-  FaMoon,
-  FaSignOutAlt,
-  FaUser
+  FaMoon
 } from 'react-icons/fa';
 
 const GitHubHeader = ({ darkMode, toggleDarkMode, isAuthenticated, user, onLogout }) => {

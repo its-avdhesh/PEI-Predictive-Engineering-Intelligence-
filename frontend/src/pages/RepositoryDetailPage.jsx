@@ -5,8 +5,6 @@ import {
   FaCodeBranch,
   FaStar,
   FaUsers,
-  FaClock,
-  FaExclamationTriangle,
   FaArrowLeft
 } from 'react-icons/fa';
 

@@ -1,28 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
-import { 
-  FaGithub, 
-  FaSun, 
-  FaMoon, 
-  FaUser,
-  FaArrowLeft,
-  FaChartLine,
-  FaSyncAlt,
-  FaCodeBranch,
-  FaStar,
-  FaSearch,
-  FaPlus,
-  FaExclamationTriangle,
-  FaClock,
-  FaCheckCircle,
-  FaGitAlt,
-  FaHistory,
-  FaTrendingUp,
-  FaUsers,
-  FaActivity,
-  FaRocket
-} from 'react-icons/fa';
-
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
 import GitHubHeader from './components/GitHubHeader.jsx';
@@ -30,6 +7,7 @@ import HomePage from './pages/HomePage.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import SignUpPage from './pages/SignUpPage.jsx';
+import AuthCallback from './pages/AuthCallback.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import AnalysisPage from './pages/AnalysisPage.jsx';
 import DocumentationPage from './pages/DocumentationPage.jsx';
@@ -78,6 +56,7 @@ function App() {
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route 
               path="/dashboard" 
               element={

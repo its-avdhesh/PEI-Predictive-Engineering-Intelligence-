@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 const AuthContext = createContext();
 
@@ -16,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('pei_token');
+    const token = localStorage.getItem('pei_token') || Cookies.get('auth_token');
     if (token) {
       setIsAuthenticated(true);
       setUser({ name: 'John Doe', avatar: 'https://github.com/johndoe.png' });
@@ -26,12 +27,14 @@ export const AuthProvider = ({ children }) => {
 
   const login = (token, userData) => {
     localStorage.setItem('pei_token', token);
+    Cookies.set('auth_token', token, { expires: 7 }); // 7 days
     setIsAuthenticated(true);
     setUser(userData);
   };
 
   const logout = () => {
     localStorage.removeItem('pei_token');
+    Cookies.remove('auth_token');
     setIsAuthenticated(false);
     setUser(null);
   };
