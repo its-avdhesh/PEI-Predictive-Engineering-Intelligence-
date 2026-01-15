@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  FaGithub, 
-  FaShieldAlt, 
-  FaCheckCircle, 
-  FaUsers,
-  FaCodeBranch,
-  FaArrowLeft,
-  FaRocket,
-  FaStar
-} from 'react-icons/fa';
+import { FaGithub, FaShieldAlt, FaCheckCircle, FaUsers, FaCodeBranch, FaArrowLeft, FaRocket, FaStar } from 'react-icons/fa';
 
 const SignUpPage = () => {
   const [isLoading, setIsLoading] = useState(false);
